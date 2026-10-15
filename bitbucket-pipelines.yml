@@ -116,5 +116,5 @@ definitions:
     node:
       key:
         files:
-          - package-lock.json
+          - package.json
       path: node_modules
