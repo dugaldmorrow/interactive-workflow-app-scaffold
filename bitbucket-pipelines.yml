@@ -1,0 +1,120 @@
+image: node:22
+
+pipelines:
+  # Validate every PR by running on branches.
+  # This does not deploy; it just runs lint/type checks so reviewers get fast feedback.
+  branches:
+    "**":
+      - step:
+          name: Validate (lint)
+          script:
+            - npm install -g @forge/cli
+            - npm install
+            - forge settings set usage-analytics false
+            - forge lint
+          caches:
+            - node
+
+    # Runs automatically on every merge to main — redeploys the app
+    main:
+      - step:
+          name: Deploy Forge App
+          deployment: production
+          script:
+            # Install the Forge CLI globally
+            - npm install -g @forge/cli
+
+            # Install app dependencies
+            - npm install
+            - forge settings set usage-analytics false
+
+            # Deploy to the production Forge environment.
+            # FORGE_EMAIL and FORGE_API_TOKEN must be set as Bitbucket repository
+            # variables (Settings → Repository variables).
+            - forge deploy --environment production --non-interactive
+
+          caches:
+            - node
+
+  # Manually triggered pipelines — run these once during initial setup
+  custom:
+    # Step B3: Run this pipeline once to register the app and get an app ID.
+    # Before running, ensure these repository variables are set:
+    #   - FORGE_EMAIL and FORGE_API_TOKEN (Repository settings → Repository variables)
+    #   - FORGE_DEVELOPER_SPACE_ID (find your developer space ID at https://developer.atlassian.com/console/)
+    # This pipeline registers the app, commits the updated manifest.yml (with the real
+    # app ID) back to main, and then run the "install-app" pipeline below.
+    register-app:
+      - step:
+          name: Register Forge App
+          script:
+            - npm install -g @forge/cli
+            - npm install
+            - forge settings set usage-analytics false
+            - forge register --developer-space-id $FORGE_DEVELOPER_SPACE_ID -y interactive-workflow-app
+            # Commit the updated manifest.yml (now containing the real app ID) back to main
+            - git config user.email "$FORGE_EMAIL"
+            - git config user.name "Bitbucket Pipeline"
+            - git add manifest.yml
+            - git diff --cached --quiet || git commit -m "chore register Forge app and update manifest with app ID"
+            - git push origin main
+
+    # Step B4: Run this pipeline once after register-app to deploy and install the app on your Jira site.
+    # Before running, set SITE_URL as a repository variable (e.g. mysite.atlassian.net)
+    install-app:
+      - step:
+          name: Deploy and Install Forge App (production)
+          script:
+            - npm install -g @forge/cli
+            - npm install
+            - forge settings set usage-analytics false
+            - forge deploy --environment production --non-interactive
+            - forge install --site $SITE_URL --product jira --environment production --non-interactive --confirm-scopes
+
+    # If a production deployment fails due to a major version bump requiring approval,
+    # run this pipeline to redeploy allowing a major version upgrade, then reinstall.
+    upgrade-app:
+      - step:
+          name: Upgrade Forge App (production)
+          deployment: production
+          script:
+            - npm install -g @forge/cli
+            - npm install
+            - forge settings set usage-analytics false
+            # Redeploy allowing a major version upgrade (may trigger approval requirements)
+            - forge deploy --environment production --major-version --non-interactive
+            # After a major version upgrade, reinstall the app into the site
+            - forge install --site $SITE_URL --product jira --environment production --non-interactive --confirm-scopes
+
+    # Optional: Install the app's *development* environment so you can test changes before merging PRs.
+    # Run this once during setup. After it's installed, you can use "deploy-dev" below as often as you like.
+    install-app-dev:
+      - step:
+          name: Deploy and Install Forge App (development)
+          deployment: Test
+          script:
+            - npm install -g @forge/cli
+            - npm install
+            - forge settings set usage-analytics false
+            - forge deploy --environment development --non-interactive
+            - forge install --site $SITE_URL --product jira --environment development --non-interactive --confirm-scopes
+
+    # Deploy the app to the Forge *development* environment (no install).
+    # Use this after "install-app-dev" has been run once.
+    deploy-dev:
+      - step:
+          name: Deploy Forge App (development)
+          deployment: Test
+          script:
+            - npm install -g @forge/cli
+            - npm install
+            - forge settings set usage-analytics false
+            - forge deploy --environment development --non-interactive
+
+definitions:
+  caches:
+    node:
+      key:
+        files:
+          - package-lock.json
+      path: node_modules

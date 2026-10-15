@@ -1,0 +1,21 @@
+{
+  "name": "interactive-workflow-app",
+  "version": "1.0.0",
+  "description": "An interactive workflow Forge app built as part of the Forge development training session.",
+  "scripts": {
+    "build": "forge deploy",
+    "lint": "forge lint"
+  },
+  "dependencies": {
+    "@forge/api": "^8.2.0",
+    "@forge/react": "^12.3.0",
+    "@forge/resolver": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/react": "^18.0.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

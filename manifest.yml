@@ -1,0 +1,25 @@
+app:
+  id: 'ari:cloud:ecosystem::app/00000000-0000-0000-0000-000000000000'
+  runtime:
+    name: nodejs22.x
+
+modules:
+  jira:globalPage:
+    - key: interactive-workflow-page
+      title: Interactive Workflow
+      resource: main
+      render: native
+      resolver:
+        function: main-resolver
+
+  function:
+    - key: main-resolver
+      handler: resolver.handler
+
+resources:
+  - key: main
+    path: src/frontend/index.tsx
+
+permissions:
+  scopes:
+    - storage:app
