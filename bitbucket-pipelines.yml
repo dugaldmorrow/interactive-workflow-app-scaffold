@@ -111,10 +111,3 @@ pipelines:
             - forge settings set usage-analytics false
             - forge deploy --environment development --non-interactive
 
-definitions:
-  caches:
-    node:
-      key:
-        files:
-          - package.json
-      path: node_modules

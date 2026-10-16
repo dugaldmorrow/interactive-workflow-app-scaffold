@@ -49,6 +49,8 @@ Repeat for each Story, in order.
 
 ## A. Site Provisioning
 
+### Step A1 — Log in to your Atlassian site
+
 The training requires you to have an Atlassian account and an Atlassian cloud site with the following products:
 
 | Product | Purpose |
@@ -67,6 +69,21 @@ Depending on how the training is organised, your facilitator may provision a sit
 > - `your-org.atlassian.net` — your full Atlassian site URL
 
 **You've done this step when:** you can log in to `your-org.atlassian.net` and see Jira and Bitbucket in the top navigation.
+
+### Step A2 — Connect Bitbucket to Jira (DVCS accounts)
+
+This connection allows Jira (and the Jira Coding Agent) to see your Bitbucket branches and Pull Requests.
+
+1. In Jira, click the **cog (⚙️)** in the top right.
+2. Select **Jira apps**.
+3. In the left sidebar, select **DVCS accounts**.
+4. Click **Link Bitbucket Cloud workspace**.
+5. Select the appropriate workspace from the dropdown.
+6. Click **Grant access**.
+7. You'll be redirected — click **Grant access** again.
+8. You'll be redirected back — click **Got it**.
+
+**You've done this step when:** your Bitbucket workspace appears in **DVCS accounts** and Jira starts showing Bitbucket activity in the **Development** panel on work items.
 
 ---
 
@@ -175,21 +192,6 @@ Once both pipelines have completed successfully, confirm that both environments 
 **You've done this step when:** both **Interactive Workflow** entries are visible in the Jira sidebar.
 
 ---
-
-### Step B5 — Connect Bitbucket to Jira (DVCS accounts)
-
-This connection allows Jira (and the Jira Coding Agent) to see your Bitbucket branches and Pull Requests.
-
-1. In Jira, click the **cog (⚙️)** in the top right.
-2. Select **Jira apps**.
-3. In the left sidebar, select **DVCS accounts**.
-4. Click **Link Bitbucket Cloud workspace**.
-5. Select the appropriate workspace from the dropdown.
-6. Click **Grant access**.
-7. You’ll be redirected — click **Grant access** again.
-8. You’ll be redirected back — click **Got it**.
-
-**You've done this step when:** your Bitbucket workspace appears in **DVCS accounts** and Jira starts showing Bitbucket activity in the **Development** panel on work items.
 
 ---
 
