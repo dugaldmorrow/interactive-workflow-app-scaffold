@@ -25,7 +25,7 @@ It's a real, useful app — and you'll build it feature by feature, one Jira wor
 
 First you need to set up a Jira space and a Bitbucket repository. The Bitbucket repository will be set up by importing an existing repository which contains the scaffold of the app that will be built. The Jira space will be populated with story work items that specify what will be built.
 
-![How Jira the setup works](./setup.svg)
+![How Jira the setup works](./training-setup.svg)
 
 Once set up, the training follows a simple software development lifecycle:
 
@@ -33,7 +33,7 @@ Once set up, the training follows a simple software development lifecycle:
 Assign story work item to coding agent  →  Coding agent implements it and creates a PR  →  Review & merge PR
 ```
 
-![How Jira Coding Agent works](./sdlc.svg)
+![How Jira Coding Agent works](./training-sdlc.svg)
 
 Each feature of the app is already defined as a Jira **Story** in your space. To implement a feature:
 
